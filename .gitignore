@@ -1,0 +1,10 @@
+# dotenv environment variables file
+.env
+.env.test
+.env.production
+
+node_modules/
+.vscode/
+.DS_Store
+.idea/
+*.log
