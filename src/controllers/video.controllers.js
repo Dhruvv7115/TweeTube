@@ -104,11 +104,11 @@ const getAllVideos = asyncHandler(async (req, res) => {
     return res
       .status(200)
       .json(new ApiResponse(200, response, "Videos fetched successfully"));
+
   } catch (error) {
     console.error("Error fetching videos:", error);
     throw new ApiError(500, "Something went wrong while fetching Videos.");
   } 
-
 
 });
 
