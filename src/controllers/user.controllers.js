@@ -102,10 +102,10 @@ const registerUser = asyncHandler(async (req, res) => {
   } catch (error) {
     console.error("Error creating user:", error);
     if(avatar){
-      await deleteFromCloudinary(avatar.public_id);
+      await deleteFromCloudinary(avatar.public_id, "image");
     }
     if(coverImage){
-      await deleteFromCloudinary(coverImage.public_id);
+      await deleteFromCloudinary(coverImage.public_id, "image");
     }
     throw new ApiError(500, "Something went wrong while creating the user and images were deleted");
     
@@ -357,7 +357,7 @@ const updateAvatar = asyncHandler(async (req, res) => {
   user.avatar = avatar?.url;
   
   // deleting the old avatar from cloudinary
-  await deleteFromCloudinary(publicId);
+  await deleteFromCloudinary(publicId, "image");
 
   await user.save({ validateBeforeSave: false });
 
@@ -405,7 +405,7 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
   
   // deleting the old coverImage from cloudinary
-  await deleteFromCloudinary(publicId);
+  await deleteFromCloudinary(publicId, "image");
 
   return res
     .status(200)

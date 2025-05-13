@@ -1,5 +1,5 @@
 {
-  "name": "xtube",
+  "name": "tweetube",
   "version": "1.0.0",
   "description": "a project inspired by youtube and twitter",
   "main": "src/index.js",

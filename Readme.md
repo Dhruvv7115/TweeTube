@@ -1,4 +1,4 @@
-# 💻 XTube 
+# 💻 TweetTube 
  
 this is a twitter(X) + youtube clone made using the below resources :-
 
@@ -36,7 +36,7 @@ Building a react frontend with UI like Youtube or X (not sure) for this project 
 
 I learnt all the major backend jargon through making this project like :
 
-- *Node.js Server-side Environment*
+- *node.js server-side environment*
 - *npm packages*
 - *Express.js Framework*
 - *MongoDB (NoSQL-DB) and Mongoose (ORM)*
@@ -47,6 +47,10 @@ I learnt all the major backend jargon through making this project like :
 - *Password Encryption with Bcrypt package*
 
 --- 
-## 📄 Backend Assignment (pending) :
+## 📄 Controllers Todos (pending) :
 
 - **Complete the controllers and routers for all the remaining models other than user model**
+
+## Todos Completed
+
+- *Video Controller todo*
