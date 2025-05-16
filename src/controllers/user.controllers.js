@@ -126,13 +126,13 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 
   if(!user) {
-    throw new ApiError(404, "User not found");
+    throw new ApiError(400, "User not found");
   }
 
   // checking if the password is correct
   const isPasswordValid = await user.comparePassword(password);
   if(!isPasswordValid) {
-    throw new ApiError(401, "Invalid password");
+    throw new ApiError(400, "Invalid password");
   }
 
   // generating access and refresh tokens
