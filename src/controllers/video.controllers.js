@@ -1,6 +1,8 @@
 import mongoose, { isValidObjectId } from "mongoose";
 import { Video } from "../models/video.models.js";
 import { User } from "../models/user.models.js";
+import { Subscription } from "../models/subscription.models.js";
+import { Like } from "../models/like.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -19,7 +21,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     userId,
   } = req.query;
   //TODO: get all videos based on query, sort, pagination
-  if (userId && !mongoose.Types.ObjectId.isValid(userId)) {
+  if (userId && !isValidObjectId(userId)) {
     throw new ApiError(400, "Invalid userId provided.");
   }
 
@@ -191,23 +193,89 @@ const getVideoById = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid Video ID");
   }
 
-  const video = await Video.findById(videoId).populate("owner", "name email");
+  const userId = req.user?._id;
 
   /* 
-      Query the database to find the video by its ID.
+    Query the database to find the video by its ID.
     - The `findById` method is used to retrieve a specific document using its _id.
     - `populate("owner", "name email")` fetches additional details about the video's owner.
     - Instead of just storing the owner's ID, this will return their name and email too.
     - This is helpful for frontend applications that want to display  the owner's info.
   */
+  
+  const video = await Video.findById(videoId).populate("owner", "fullname avatar");
 
   if (!video) {
     throw new ApiError(404, "Video not found");
   }
 
+
+  if(userId){
+    // Use aggregation to check if video exists in watch history and get its position
+    const userWatchHistory = await User.findOne(
+      { _id: userId },
+      { watchHistory: 1 } // project only watchHistory
+    );
+    
+    if (!userWatchHistory) {
+      throw new ApiError(401, "Unauthorized access");
+    }
+    
+    const videoIndex = userWatchHistory.watchHistory.findIndex(
+      id => id.toString() === videoId.toString()
+    );
+    
+    const isFirstView = videoIndex === -1;
+    
+    // If first view, increment video view count
+    if (isFirstView) {
+      video.views += 1;
+      await video.save();
+    }
+
+    await User.updateOne(
+      { 
+        _id: userId 
+      },
+      [
+        // First stage: If video exists, filter it out of the array
+        {
+          $set: {
+            watchHistory: {
+              $filter: {
+                input: "$watchHistory",
+                cond: { $ne: ["$$this", new mongoose.Types.ObjectId(videoId)] } // ne selects the documents that don't have the specified value.
+              }
+            }
+          }
+        },
+        // Second stage: Add video to the beginning of the array
+        {
+          $set: {
+            watchHistory: {
+              $concatArrays: [[new mongoose.Types.ObjectId(videoId)], "$watchHistory"]
+            }
+          }
+        }
+      ]
+    );
+  }
+
+  // Count the likes for this video
+  const likesCount = await Like.countDocuments({ video: videoId });
+  // Count the subscribers of the owner 
+  const subscribersCount = await Subscription.countDocuments({ channel: video.owner._id });
+
+
+  const videoResponse = {
+    ...video._doc, // ._doc to remove the mongoose document instance(just returns the video object and nothing else)
+    likes: likesCount,
+    subscribers: subscribersCount,
+  }
+
   return res
     .status(200)
-    .json(new ApiResponse(200, video, "Video fetched successfully"));
+    .json(new ApiResponse(200, videoResponse, "Video fetched successfully"));
 });
 
 const updateVideo = asyncHandler(async (req, res) => {
