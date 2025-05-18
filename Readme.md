@@ -28,7 +28,7 @@ Project uses all standard practices like JWT, bcrypt, access tokens, refresh Tok
 
 ## 🔜 Future Aspects :
 
-Building a react frontend with UI like Youtube or X (not sure) for this project after learning react and deploying this on vercel in the next 1 month.
+Building a **React Frontend** with UI like Youtube or X (not sure) for this project after learning react and deploying this on vercel in the next 1 or 2 months.
 
 ---
 
@@ -47,10 +47,7 @@ I learnt all the major backend jargon through making this project like :
 - *Password Encryption with Bcrypt package*
 
 --- 
-## 📄 Controllers Todos (pending) :
+#### 📄 Controllers Todos (COMPLETED) :
 
-- **Complete the controllers and routers for all the remaining models other than user model**
-
-## Todos Completed
-
-- *Video Controller todo*
+- Completed all the controller todos on **18 May 2025**
+- **Backend** of this project is over if any **changes** are required that would be made when i write the **frontend** for this **project**(i.e. **in the upcoming month**).
