@@ -5,22 +5,22 @@
   updatedAt Date
 */
 
-import mongoose, { Schema } from "mongoose"
+import mongoose, { Schema } from "mongoose";
 
 const subscriptionSchema = new Schema(
   {
     subscriber: {
       type: Schema.Types.ObjectId, //one who is subscribing (subscriber)
-      ref: "User"
+      ref: "User",
     },
     channel: {
       type: Schema.Types.ObjectId, //the channel to which the subscriber above is subscribing
-      ref: "User"
-    }, 
+      ref: "User",
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
-)
+);
 
-export const Subscription = mongoose.model("Subscription", subscriptionSchema)
+export const Subscription = mongoose.model("Subscription", subscriptionSchema);

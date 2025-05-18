@@ -1,6 +1,13 @@
-import { Router } from 'express';
-import { addVideoComment, addTweetComment, deleteComment, getVideoComments, getTweetComments, updateComment, } from "../controllers/comment.controllers.js"
-import { verifyJWT } from "../middlewares/auth.middleware.js"
+import { Router } from "express";
+import {
+  addVideoComment,
+  addTweetComment,
+  deleteComment,
+  getVideoComments,
+  getTweetComments,
+  updateComment,
+} from "../controllers/comment.controllers.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -12,4 +19,4 @@ router.route("/t/:tweetId").get(getTweetComments).post(addTweetComment);
 
 router.route("/c/:commentId").delete(deleteComment).patch(updateComment);
 
-export default router
+export default router;

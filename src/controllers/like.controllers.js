@@ -115,12 +115,12 @@ const getLikedVideos = asyncHandler(async (req, res) => {
 
   const likedVideos = await Like.aggregate([
     {
-      $match:{
+      $match: {
         likedBy: new mongoose.Types.ObjectId(userId),
         video: {
-          $exists: true
-        }
-      }
+          $exists: true,
+        },
+      },
     },
     {
       $lookup: {
@@ -134,75 +134,72 @@ const getLikedVideos = asyncHandler(async (req, res) => {
               thumbnail: 1,
               views: 1,
               owner: 1,
-            }
+            },
           },
           {
-            $lookup:{
+            $lookup: {
               from: "users",
               localField: "owner",
               foreignField: "_id",
               as: "owner",
               pipeline: [
                 {
-                  $project:{
+                  $project: {
                     avatar: 1,
                     fullname: 1,
-                  }
+                  },
                 },
-              ]
-            }
+              ],
+            },
           },
           {
             $addFields: {
               owner: {
-                $arrayElemAt: ["$owner", 0]
-              }
-            }
-          }
-        ]
-      }
+                $arrayElemAt: ["$owner", 0],
+              },
+            },
+          },
+        ],
+      },
     },
     {
       $addFields: {
         video: {
-          $arrayElemAt: ["$video", 0]
-        }
-      }
-    }
-  ])
-
+          $arrayElemAt: ["$video", 0],
+        },
+      },
+    },
+  ]);
 
   //below one is copied from github and is short and precise got to know about $exists operator.
 
   // const likedVideos = await Like.find({
-  //   likedBy: userId, 
+  //   likedBy: userId,
   //   video: { $exists: true },
   // }).populate("video", "title views thumbnail");
-  
-  if(!likedVideos){
-    throw new ApiError(400, "No liked videos found.")
+
+  if (!likedVideos) {
+    throw new ApiError(400, "No liked videos found.");
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(
-      200, 
-      likedVideos, 
-      "Liked videos fetched successfully."
-    ))
+    .json(
+      new ApiResponse(200, likedVideos, "Liked videos fetched successfully.")
+    );
 });
 const getLikedTweets = asyncHandler(async (req, res) => {
   //TODO: get all liked tweets
-  const userId = req.user?._id
+  const userId = req.user?._id;
 
   const likedTweets = await Like.aggregate([
     {
-      $match:{
+      $match: {
         likedBy: new mongoose.Types.ObjectId(userId),
         tweet: {
-          $exists: true
-        }
-      }
+          $exists: true,
+        },
+      },
     },
     {
       $lookup: {
@@ -215,54 +212,58 @@ const getLikedTweets = asyncHandler(async (req, res) => {
             $project: {
               content: 1,
               owner: 1,
-            }
+            },
           },
           {
             $lookup: {
-              from: "users", 
-              localField: "owner", 
+              from: "users",
+              localField: "owner",
               foreignField: "_id",
-              as: "owner", 
+              as: "owner",
               pipeline: [
                 {
-                  $project:{
+                  $project: {
                     fullname: 1,
-                    avatar: 1
-                  }
-                }
-              ]
-            }
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
           },
           {
             $addFields: {
               owner: {
-                $arrayElemAt: ["$owner", 0]
-              }
-            }
-          }
-        ]
-      }
+                $arrayElemAt: ["$owner", 0],
+              },
+            },
+          },
+        ],
+      },
     },
     {
       $addFields: {
         tweet: {
-          $arrayElemAt: ["$tweet", 0]
-        }
-      }
-    }
+          $arrayElemAt: ["$tweet", 0],
+        },
+      },
+    },
   ]);
 
-  if(!likedTweets){
-    throw new ApiError(400, "No Liked Tweets.")
+  if (!likedTweets) {
+    throw new ApiError(400, "No Liked Tweets.");
   }
-  
+
   return res
     .status(200)
-    .json(new ApiResponse(
-      200, 
-      likedTweets, 
-      "Liked tweets fetched successfully."
-    ))
+    .json(
+      new ApiResponse(200, likedTweets, "Liked tweets fetched successfully.")
+    );
 });
 
-export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos, getLikedTweets };
+export {
+  toggleCommentLike,
+  toggleTweetLike,
+  toggleVideoLike,
+  getLikedVideos,
+  getLikedTweets,
+};
