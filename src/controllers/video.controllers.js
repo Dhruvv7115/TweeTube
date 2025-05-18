@@ -25,9 +25,8 @@ const getAllVideos = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid userId provided.");
   }
 
-  let videos;
   try {
-    videos = await Video.aggregate([
+    const pipeline = [
       {
         $match: {
           $or: [
@@ -42,7 +41,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
           from: "users",
           localField: "owner",
           foreignField: "_id",
-          as: "owner", 
+          as: "owner",
           pipeline: [
             {
               $project: {
@@ -66,46 +65,30 @@ const getAllVideos = asyncHandler(async (req, res) => {
           views: 1,
           createdAt: 1,
           updatedAt: 1,
-          owner: { $arrayElemAt: ["$owner", 0] }, // Get the first element of the array
+          owner: { $arrayElemAt: ["$owner", 0] }
         }
       },
       {
         $sort: {
-          [sortBy]: sortType === "desc" ? -1 : 1,
+          [sortBy]: sortType === "desc" ? -1 : 1
         }
-      },
-      {
-        $skip: (page - 1) * limit
-      },
-      {
-        $limit: parseInt(limit)
       }
-    ]);
-    // console.log("Videos: ", videos);
+    ];
 
-    // count the total number of videos matching the query
-    const videoCount = await Video.countDocuments({
-      $or: [
-        { title: { $regex: query, $options: "i" } },
-        { description: { $regex: query, $options: "i" } },
-      ],
-      ...(userId ? { owner: new mongoose.Types.ObjectId(userId) } : {}),
-    });
-
-    // count the total number of pages
-    // totalPages = total number of videos / limit
-    // Math.ceil is used to round up the number of pages
-    const totalPages = Math.ceil(videoCount / limit);
-    const response = {
+    const options = {
       page: parseInt(page),
-      limit: parseInt(limit),
-      totalPages,
-      totalVideos: videoCount,
-      videos,
+      limit: parseInt(limit)
     };
+
+    const videos = await Video.aggregatePaginate(Video.aggregate(pipeline), options);
+
     return res
       .status(200)
-      .json(new ApiResponse(200, response, "Videos fetched successfully"));
+      .json(new ApiResponse(
+        200, 
+        videos,
+        "Videos fetched successfully."
+      ))
 
   } catch (error) {
     console.error("Error fetching videos:", error);
