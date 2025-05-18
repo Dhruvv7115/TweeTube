@@ -7,7 +7,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.models.js";
 
 const getChannelStats = asyncHandler(async (req, res) => {
-  // TODO: Get the channel stats like total video views, total subscribers, total videos, total likes etc.
   const userId = req.user?._id;
 
   const userDetails = await User.findOne({ _id: userId }).select(
@@ -17,12 +16,10 @@ const getChannelStats = asyncHandler(async (req, res) => {
   const subscribersCount = await Subscription.countDocuments({
     channel: userId,
   });
-  // console.log(subscribersCount);
 
   const videosCount = await Video.countDocuments({
     owner: userId,
   });
-  // console.log(videosCount)
 
   const viewStatistics = await Video.aggregate([
     {
@@ -109,7 +106,6 @@ const getChannelStats = asyncHandler(async (req, res) => {
 });
 
 const getChannelVideos = asyncHandler(async (req, res) => {
-  // TODO: Get all the videos uploaded by the channel
   const userId = req.user?._id;
   const videos = await Video.find({ owner: userId })
     .select("title thumbnail duration views createdAt updatedAt")

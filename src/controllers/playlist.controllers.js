@@ -1,4 +1,4 @@
-import mongoose, { isValidObjectId, syncIndexes } from "mongoose";
+import mongoose, { isValidObjectId, } from "mongoose";
 import { Playlist } from "../models/playlist.models.js";
 import { Video } from "../models/video.models.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -7,7 +7,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createPlaylist = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
-  //TODO: create playlist
+
   if (!name) {
     throw new ApiError(400, "A title for the playlist is required");
   }
@@ -29,7 +29,6 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
   const { userId } = req.params;
-  //TODO: get user playlists
 
   if (!isValidObjectId(userId)) {
     throw new ApiError(400, "Invalid user id.");
@@ -50,7 +49,6 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
 
 const getPlaylistById = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
-  //TODO: get playlist by id
 
   if (!isValidObjectId(playlistId)) {
     throw new ApiError(400, "Invalid playlist id.");
@@ -71,7 +69,6 @@ const getPlaylistById = asyncHandler(async (req, res) => {
 
 const addVideoToPlaylist = asyncHandler(async (req, res) => {
   const { playlistId, videoId } = req.params;
-  //TODO: Add video to playlist.
 
   if (!isValidObjectId(playlistId)) {
     throw new ApiError(400, "Invalid playlist id.");
@@ -115,7 +112,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   const { playlistId, videoId } = req.params;
-  // TODO: remove video from playlist
+  
   if (!isValidObjectId(playlistId)) {
     throw new ApiError(400, "Invalid playlist id.");
   }
@@ -162,7 +159,6 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
 
 const deletePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
-  // TODO: delete playlist
 
   if (!isValidObjectId(playlistId)) {
     throw new ApiError(400, "Invalid playlist id.");
@@ -194,8 +190,6 @@ const deletePlaylist = asyncHandler(async (req, res) => {
 const updatePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
   const { name, description } = req.body;
-
-  //TODO: update playlist
 
   if (!isValidObjectId(playlistId)) {
     throw new ApiError(400, "Invalid playlist id.");

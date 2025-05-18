@@ -3,10 +3,8 @@ import { Comment } from "../models/comment.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-// import { isValidElement } from "react"
 
 const getVideoComments = asyncHandler(async (req, res) => {
-  //TODO: get all comments for a video
   const { videoId } = req.params;
   const { page = 1, limit = 10 } = req.query;
 
@@ -58,7 +56,6 @@ const getVideoComments = asyncHandler(async (req, res) => {
 });
 
 const getTweetComments = asyncHandler(async (req, res) => {
-  //TODO: get all comments for a tweet
   const { tweetId } = req.params;
   const { page = 1, limit = 10 } = req.query;
 
@@ -110,7 +107,6 @@ const getTweetComments = asyncHandler(async (req, res) => {
 });
 
 const addVideoComment = asyncHandler(async (req, res) => {
-  // TODO: add a comment to a video
   const { content } = req.body;
 
   const userId = req.user?._id;
@@ -137,7 +133,6 @@ const addVideoComment = asyncHandler(async (req, res) => {
 });
 
 const addTweetComment = asyncHandler(async (req, res) => {
-  // TODO: add a comment to a tweet
   const { content } = req.body;
 
   const userId = req.user?._id;
@@ -164,7 +159,6 @@ const addTweetComment = asyncHandler(async (req, res) => {
 });
 
 const updateComment = asyncHandler(async (req, res) => {
-  // TODO: update a comment
   const { content } = req.body;
 
   const { commentId } = req.params;
@@ -198,7 +192,6 @@ const updateComment = asyncHandler(async (req, res) => {
 });
 
 const deleteComment = asyncHandler(async (req, res) => {
-  // TODO: delete a comment
   const { commentId } = req.params;
 
   const userId = req.user?._id;

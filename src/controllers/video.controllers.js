@@ -20,7 +20,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     sortType = "desc",
     userId,
   } = req.query;
-  //TODO: get all videos based on query, sort, pagination
+
   if (userId && !isValidObjectId(userId)) {
     throw new ApiError(400, "Invalid userId provided.");
   }
@@ -96,16 +96,16 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 const publishAVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
+   
   if (!title) {
     throw new ApiError(400, "Title is required");
   }
 
-  // TODO: get video, upload to cloudinary, create video
-
   const videoFilePath = req.files?.videoFile?.[0]?.path;
-  console.log("Video File Path: ", videoFilePath);
+  // console.log("Video File Path: ", videoFilePath);
   const thumbnailPath = req.files?.thumbnail?.[0]?.path;
-  console.log("Thumbnail Path: ", thumbnailPath);
+  // console.log("Thumbnail Path: ", thumbnailPath);
+
   if (!videoFilePath) {
     throw new ApiError(400, "Video file is required");
   }
@@ -167,7 +167,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
 const getVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  //TODO: get video by id
 
   if (!isValidObjectId(videoId)) {
     throw new ApiError(400, "Invalid Video ID");
@@ -266,7 +265,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  //TODO: update video details like title, description, thumbnail
+
   const { title, description } = req.body;
   const thumbnailLocalPath = req.file?.path;
 
@@ -320,9 +319,7 @@ const updateVideo = asyncHandler(async (req, res) => {
 
 const deleteVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-
-  // TODO: delete video
-  // isValidObjectId(videoId) checks if the videoId is a valid MongoDB ObjectId
+  
   if (!isValidObjectId(videoId)) {
     throw new ApiError(400, "Invalid videoId");
   }
